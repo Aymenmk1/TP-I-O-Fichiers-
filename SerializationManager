@@ -1,0 +1,26 @@
+package srcc;
+
+import srcc.Produit;
+
+import java.io.*;
+import java.util.List;
+
+public class SerializationManager {
+
+    public static void serialize(String path, List<Produit> produits) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(path))) {
+            oos.writeObject(produits);
+        } catch (IOException e) {
+            System.err.println("Erreur sérialisation : " + e.getMessage());
+        }
+    }
+
+    public static List<Produit> deserialize(String path) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(path))) {
+            return (List<Produit>) ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Erreur désérialisation : " + e.getMessage());
+        }
+        return null;
+    }
+}
