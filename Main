@@ -1,0 +1,35 @@
+package srcc;
+
+import srcc.Produit;
+import srcc.*;
+
+import java.io.File;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+      
+        FileManager.createWorkspace();
+        System.out.println("Contenu du workspace :");
+        FileManager.listDirectory(new File("workspace"));
+
+        
+        List<Produit> produits = StockManager.importStock("workspace/data/stock_initial.csv");
+        StockManager.printStockInfo(produits);
+
+        VenteManager.appendVenteUtf8("workspace/data/ventes.txt", "BK002", 2, 361.00);
+        VenteManager.appendVentePrintWriter("workspace/data/ventes.txt", "BK003", 1, 199.90);
+
+        
+        BinaryManager.copyFile("dummy.bin", "workspace/photos/BK001.jpg");
+
+        IndexManager.writeIndex("workspace/data/index.dat", produits);
+        long pos = IndexManager.seekByRef("workspace/data/index.dat", "BK003");
+        System.out.println("Position de BK003 : " + pos);
+
+        SerializationManager.serialize("workspace/data/produits.ser", produits);
+        List<Produit> loaded = SerializationManager.deserialize("workspace/data/produits.ser");
+        System.out.println("Premier produit : " + loaded.get(0));
+        System.out.println("Dernier produit : " + loaded.get(loaded.size()-1));
+    }
+}
