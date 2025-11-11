@@ -1,0 +1,22 @@
+package srcc;
+
+import java.io.*;
+
+public class BinaryManager {
+
+    public static void copyFile(String srcPath, String destPath) {
+        File src = new File(srcPath);
+        File dest = new File(destPath);
+        try (InputStream in = new FileInputStream(src);
+             OutputStream out = new FileOutputStream(dest)) {
+            byte[] buf = new byte[8192]; 
+            int n;
+            while ((n = in.read(buf)) != -1) {
+                out.write(buf, 0, n);
+            }
+            System.out.println("Copie réussie : " + src.length() + " octets -> " + dest.length() + " octets");
+        } catch (IOException e) {
+            System.err.println("Erreur copie binaire : " + e.getMessage());
+        }
+    }
+}
