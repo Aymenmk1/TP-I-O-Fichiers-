@@ -1,0 +1,52 @@
+package srcc;
+
+import java.io.*;
+
+public class FileManager {
+
+    public static void createWorkspace() {
+        String[] dirs = {
+            "workspace/data", "workspace/photos", "workspace/logs", "workspace/tmp"
+        };
+        String[] files = {
+            "workspace/data/stock_initial.csv",
+            "workspace/data/ventes.txt",
+            "workspace/data/produits.ser",
+            "workspace/data/index.dat"
+        };
+
+        for (String dirPath : dirs) {
+            File dir = new File(dirPath);
+            if (!dir.exists() && dir.mkdirs()) {
+                System.out.println("Dossier créé : " + dir.getAbsolutePath());
+            }
+        }
+
+        for (String filePath : files) {
+            File f = new File(filePath);
+            try {
+                if (!f.exists() && f.createNewFile()) {
+                    System.out.println("Fichier créé : " + f.getAbsolutePath());
+                }
+            } catch (IOException e) {
+                System.err.println("Erreur création fichier : " + e.getMessage());
+            }
+        }
+    }
+
+    public static void listDirectory(File dir) {
+        if (!dir.exists()) return;
+
+        File[] content = dir.listFiles();
+        if (content != null) {
+            for (File f : content) {
+                if (f.isDirectory()) {
+                    System.out.println("[DIR] " + f.getAbsolutePath());
+                    listDirectory(f); 
+                } else {
+                    System.out.println("[FILE] " + f.getAbsolutePath() + " - " + f.length() + " octets");
+                }
+            }
+        }
+    }
+}
