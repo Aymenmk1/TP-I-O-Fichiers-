@@ -1,0 +1,34 @@
+package srcc;
+
+
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.List;
+import srcc.Produit;
+
+public class IndexManager {
+
+    public static void writeIndex(String path, List<Produit> produits) {
+        try (RandomAccessFile raf = new RandomAccessFile(path, "rw")) {
+            for (Produit p : produits) {
+                raf.writeUTF(p.getRef());
+                raf.writeLong((long) (Math.random() * 10000)); 
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur index : " + e.getMessage());
+        }
+    }
+
+    public static long seekByRef(String path, String ref) {
+        try (RandomAccessFile raf = new RandomAccessFile(path, "r")) {
+            while (raf.getFilePointer() < raf.length()) {
+                String currentRef = raf.readUTF();
+                long pos = raf.readLong();
+                if (currentRef.equals(ref)) return pos;
+            }
+        } catch (IOException e) {
+            System.err.println("Erreur seek : " + e.getMessage());
+        }
+        return -1;
+    }
+}
