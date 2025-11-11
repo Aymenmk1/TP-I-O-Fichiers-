@@ -1,0 +1,28 @@
+package srcc;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+
+public class VenteManager {
+
+    public static void appendVenteUtf8(String filePath, String ref, int qte, double montant) {
+        try (BufferedWriter bw = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(filePath, true), StandardCharsets.UTF_8))) {
+            bw.write(LocalDateTime.now() + ";" + ref + ";" + qte + ";" + montant);
+            bw.newLine();
+            bw.flush();
+        } catch (IOException e) {
+            System.err.println("Erreur écriture vente : " + e.getMessage());
+        }
+    }
+
+    public static void appendVentePrintWriter(String filePath, String ref, int qte, double montant) {
+        try (PrintWriter pw = new PrintWriter(
+                new OutputStreamWriter(new FileOutputStream(filePath, true), StandardCharsets.UTF_8), true)) {
+            pw.printf("%s;%s;%d;%.2f%n", LocalDateTime.now(), ref, qte, montant);
+        } catch (IOException e) {
+            System.err.println("Erreur écriture vente : " + e.getMessage());
+        }
+    }
+}
